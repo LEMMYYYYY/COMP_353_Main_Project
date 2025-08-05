@@ -1,0 +1,49 @@
+import db_operations as ops
+from mysql.connector import Error as DB_Error
+
+# Define a custom exception for the UI to catch
+class RuleViolation(Exception):
+    pass
+
+def execute_query(query_func, params=None):
+    """A wrapper for all SELECT operations."""
+    try:
+        if params:
+            return query_func(**params)
+        else:
+            return query_func()
+    except DB_Error as e:
+        # For simplicity, we can just let Streamlit show the raw error
+        # In a production app, you would log this and show a friendly message.
+        raise e
+
+def execute_change(operation_func, params=None):
+    """A wrapper for all INSERT, UPDATE, DELETE operations."""
+    try:
+        if params:
+            return operation_func(**params)
+        else:
+            return operation_func()
+    except DB_Error as e:
+        # Catch errors from the DB (like unique constraint violations from triggers)
+        # and turn them into a user-friendly error that the UI can display.
+        raise RuleViolation(str(e)) from e
+    except Exception as e:
+        raise e
+
+def execute_raw_sql(sql, params=None):
+    """A special function to run raw SQL for complex, one-off reports."""
+    from db_connector import get_db_connection
+    conn = get_db_connection()
+    if not conn: return []
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(sql, params)
+        results = cursor.fetchall()
+        return results
+    except DB_Error as e:
+        raise e
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()

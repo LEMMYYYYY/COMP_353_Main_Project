@@ -63,7 +63,7 @@ class PlayerPosition(Enum):
     OPPOSITE_HITTER = 'Opposite Hitter'
     MIDDLE_BLOCKER = 'Middle Blocker'
     DEFENSIVE_SPECIALIST = 'Defensive Specialist'
-    LIBERO = 'Libero'  # Corrected from LIBERY
+    LIBERO = 'Libero'
 
 # =================================================================
 # DATACLASS MODELS
@@ -89,10 +89,9 @@ class Person:
 class ClubMember:
     club_member_id: int
     height: Decimal | None
-    weight: Decimal | None  # Corrected from float to Decimal
+    weight: Decimal | None
     activity_status: ActivityStatus
     join_date: date
-    # Optional: You can load the full Person object here for convenience in your app
     person_details: Person | None = None
 
 @dataclass

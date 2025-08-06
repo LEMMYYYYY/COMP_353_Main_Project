@@ -1,5 +1,3 @@
-# pages/1_Locations.py (Final Version with all Location fields)
-
 import streamlit as st
 import pandas as pd
 import db
@@ -31,7 +29,6 @@ with st.expander("➕ Add a New Location"):
                 st.warning("Location Name and Type are required.")
             else:
                 try:
-                    # Pass all the new fields to the backend function
                     db.execute_change(ops.add_location, params={
                         "name": loc_name, "location_type": loc_type, "address": loc_address,
                         "city": loc_city, "province": loc_province, "postal_code": loc_postal or None,
@@ -73,7 +70,7 @@ if selected_location_data:
             with col1:
                 update_name = st.text_input("Location Name", value=selected_location_data['name'])
                 update_address = st.text_input("Address", value=selected_location_data['address'])
-                update_postal_code = st.text_input("Postal Code", value=selected_location_data['postal_code']) # <-- ADDED FIELD
+                update_postal_code = st.text_input("Postal Code", value=selected_location_data['postal_code'])
             with col2:
                 update_web = st.text_input("Web Address", value=selected_location_data['web_address'])
                 update_capacity = st.number_input("Max Capacity", value=selected_location_data['max_capacity'] or 0)
@@ -85,7 +82,7 @@ if selected_location_data:
                     "address": update_address,
                     "web_address": update_web,
                     "max_capacity": update_capacity,
-                    "postal_code": update_postal_code # <-- ADDED FIELD
+                    "postal_code": update_postal_code
                 }
                 criteria = {"location_id": selected_id}
                 try:

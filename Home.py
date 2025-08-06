@@ -6,10 +6,8 @@ st.set_page_config(page_title="MVC Admin", layout="wide")
 
 st.title("Montreal Volleyball Club - Admin Dashboard")
 
-# --- NEW: DYNAMIC DASHBOARD METRICS ---
 st.header("System at a Glance")
 
-# Call our new backend function to get live data
 metrics = db.execute_query(ops.get_dashboard_metrics)
 
 col1, col2, col3 = st.columns(3)

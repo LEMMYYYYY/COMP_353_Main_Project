@@ -122,7 +122,6 @@ with st.expander("✏️ Update Member's Profile"):
 # --- LOCATION ASSIGNMENT ---
 with st.expander("📍 Manage Location Assignment"):
     st.write("##### Location History")
-    # Use generic search to get all assignments for this person
     history = db.execute_query(ops.search, params={"table_name": "location_assignment", "person_id": selected_id})
     st.table(pd.DataFrame(history))
 
@@ -142,7 +141,6 @@ with st.expander("📍 Manage Location Assignment"):
             submitted = st.form_submit_button("Assign to Location")
             if submitted:
                 try:
-                    # Call our existing assignment function, but WITHOUT role/mandate
                     db.execute_change(ops.assign_person_to_location, params={
                         "person_id": selected_id,
                         "location_id": loc_map[loc_label],
@@ -224,7 +222,6 @@ with st.expander("👨‍👩‍👧 Manage Family Links"):
     st.write("##### Link an Existing Person")
     
     all_people = db.execute_query(ops.search, params={"table_name": "person"})
-    # Exclude the member themselves and already linked family members from the list
     linked_ids = {link['family_member_id'] for link in links}
     people_options = {
         f"#{p['person_id']} - {p['first_name']} {p['last_name']}": p['person_id'] 
@@ -261,7 +258,6 @@ with st.expander("🗑️ Delete Member"):
     
     if st.button(f"Permanently Delete Member #{selected_id}"):
         try:
-            # Deleting the 'person' record will cascade to all other tables.
             db.execute_change(ops.delete, params={"table_name": "person", "person_id": selected_id})
             st.success("Member deleted successfully.")
             st.rerun()

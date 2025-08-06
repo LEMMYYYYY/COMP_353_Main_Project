@@ -18,21 +18,17 @@ with st.expander("➕ Create a New Session"):
         else:
             loc_map = {f"{l['name']} ({l['city']})": l['location_id'] for l in locations}
             
-            # --- DATETIME INPUT FIX ---
             col1, col2, col3, col4 = st.columns(4)
             with col1:
                 session_type = st.selectbox("Session Type", ["Game", "Training"])
             with col2:
                 loc_label = st.selectbox("Location", loc_map.keys())
             with col3:
-                # Use separate date and time inputs
                 start_date_val = st.date_input("Start Date", value=date.today())
             with col4:
                 start_time_val = st.time_input("Start Time", value=datetime.now().time())
             
-            # Combine the date and time into a single datetime object
             date_time = datetime.combine(start_date_val, start_time_val)
-            # --- END OF FIX ---
 
             submitted = st.form_submit_button("Create Session")
             if submitted:
@@ -64,7 +60,6 @@ sid = session_options[selected_label]
 
 st.subheader(f"Dashboard for Session #{sid}")
 
-# Create tabs for the management dashboard
 tab1, tab2, tab3 = st.tabs(["👥 Teams", "📝 Rosters & Formations", "⚙️ Details & Score"])
 
 # --- Tab 1: Manage Teams ---
@@ -148,16 +143,12 @@ with tab3:
     session_data = db.execute_query(ops.search, params={"table_name": "sessions", "session_id": sid})[0]
     
     with st.form("update_session_form"):
-        # --- DATETIME INPUT FIX ---
         col_d, col_t = st.columns(2)
         with col_d:
             new_date = st.date_input("New Date", value=session_data['date_time'].date())
         with col_t:
             new_time = st.time_input("New Time", value=session_data['date_time'].time())
-        
-        # Combine them back into a single datetime object for the update
         new_datetime = datetime.combine(new_date, new_time)
-        # --- END OF FIX ---
         
         final_score = st.text_input("Final Score", value=session_data['final_score'], help="e.g., '3-1' or '25-23, 25-21'")
         

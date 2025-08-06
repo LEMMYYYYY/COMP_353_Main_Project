@@ -8,7 +8,6 @@ st.title("Manage All People")
 
 st.info("This is an admin-level page to view and manage every individual in the database, including club members, staff, and family contacts.")
 
-# Use our generic search to get everyone
 all_people = db.execute_query(ops.search, params={"table_name": "person"})
 
 if not all_people:
@@ -23,15 +22,12 @@ st.divider()
 st.header("🗑️ Delete a Person Record")
 st.warning("Warning: Deleting a person is permanent. If they are an active club member or have other critical associations, the deletion will be blocked by the database.", icon="⚠️")
 
-# Create a dropdown of people to delete
 options = {f"#{p['person_id']} - {p['first_name']} {p['last_name']} ({p['email_address']})": p['person_id'] for p in all_people}
 selected_label = st.selectbox("Select a person to permanently delete", options.keys())
 selected_id = options[selected_label]
 
 if st.button(f"Delete Person #{selected_id} from the System"):
     try:
-        # Our generic delete function is perfect for this.
-        # The ON DELETE CASCADE in the database will handle removing dependent records.
         db.execute_change(ops.delete, params={"table_name": "person", "person_id": selected_id})
         st.success("Person record deleted successfully.")
         st.rerun()

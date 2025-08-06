@@ -36,7 +36,6 @@ with st.expander("➕ Assign a New Role to a Person"):
             submitted = st.form_submit_button("Create Assignment")
             if submitted:
                 try:
-                    # Use the existing backend function
                     db.execute_change(ops.assign_person_to_location, params={
                         "person_id": person_options[person_label],
                         "location_id": location_options[location_label],
@@ -47,7 +46,6 @@ with st.expander("➕ Assign a New Role to a Person"):
                     st.success("Personnel assignment created successfully!")
                     st.rerun()
                 except db.RuleViolation as e:
-                    # This will catch trigger errors (e.g., no SSN, time conflicts)
                     st.error(f"Error creating assignment: {e}")
 
 st.divider()
@@ -56,7 +54,6 @@ st.divider()
 st.header("Current Active Personnel Assignments")
 st.info("To edit an assignment, end the current one and create a new one with the updated details. This preserves the work history.")
 
-# Use our new backend function to get the current list
 assignments = db.execute_query(ops.get_current_personnel_assignments)
 
 if not assignments:
@@ -72,7 +69,6 @@ else:
 
     if st.button("End This Assignment"):
         try:
-            # Use our generic update function to set the end_date
             update_data = {"end_date": date.today()}
             criteria = {"assignment_id": selected_id}
             db.execute_change(ops.update, params={"table_name": "location_assignment", "criteria": criteria, "new_data": update_data})

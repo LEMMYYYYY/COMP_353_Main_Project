@@ -41,7 +41,6 @@ with st.form("new_payment_form", clear_on_submit=True):
             st.success("Payment recorded successfully. Member status may have been updated by a database trigger.")
             st.rerun()
         except db.RuleViolation as e:
-            # This will catch our 4-installment limit trigger
             st.error(f"Could not record payment: {e}")
 
 st.divider()
@@ -50,11 +49,9 @@ st.divider()
 st.header("View Fee & Donation History")
 st.write("This table shows a summary of payments, required fees, and calculated donations for the selected member for each year.")
 
-# Use our dedicated backend function to get the fee history
 fee_data = db.execute_query(ops.get_payments_and_fees_for_member, params={"club_member_id": mid})
 if fee_data:
     df = pd.DataFrame(fee_data)
-    # Reorder columns for better readability
     df = df[['membership_year', 'age_in_year', 'required_fee', 'total_paid', 'donation']]
     st.dataframe(df, use_container_width=True, hide_index=True)
 else:

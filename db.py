@@ -1,7 +1,6 @@
 import db_operations as ops
 from mysql.connector import Error as DB_Error
 
-# Define a custom exception for the UI to catch
 class RuleViolation(Exception):
     pass
 
@@ -13,8 +12,6 @@ def execute_query(query_func, params=None):
         else:
             return query_func()
     except DB_Error as e:
-        # For simplicity, we can just let Streamlit show the raw error
-        # In a production app, you would log this and show a friendly message.
         raise e
 
 def execute_change(operation_func, params=None):
@@ -25,8 +22,6 @@ def execute_change(operation_func, params=None):
         else:
             return operation_func()
     except DB_Error as e:
-        # Catch errors from the DB (like unique constraint violations from triggers)
-        # and turn them into a user-friendly error that the UI can display.
         raise RuleViolation(str(e)) from e
     except Exception as e:
         raise e

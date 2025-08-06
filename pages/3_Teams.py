@@ -23,7 +23,6 @@ with st.expander("➕ Create a New Team"):
         with col1:
             team_gender = st.selectbox("Team Gender*", ["Male", "Female"])
         with col2:
-            # Create a mapping of location names to their IDs for the dropdown
             loc_options = {f"{l['name']} ({l['city']})": l['location_id'] for l in locations}
             selected_loc_name = st.selectbox("Home Location*", loc_options.keys())
         
@@ -48,7 +47,6 @@ st.divider()
 # --- READ / UPDATE / DELETE ---
 st.header("View and Edit Existing Teams")
 
-# Use our new backend function to get the team list
 teams = db.execute_query(ops.get_all_teams_with_details)
 if not teams:
     st.info("No teams found. Use the form above to create one.")
@@ -75,13 +73,11 @@ if selected_team_data:
             
             update_name = st.text_input("Team Name", value=selected_team_data['name'])
             
-            # For dropdowns, we need to find the index of the current value to pre-select it
             gender_options = ["Male", "Female"]
             current_gender_index = gender_options.index(selected_team_data['team_gender'])
             update_gender = st.selectbox("Team Gender", gender_options, index=current_gender_index)
             
             loc_options_list = list(loc_options.keys())
-            # Find the key that corresponds to the current home_location_id
             current_loc_key = next((key for key, val in loc_options.items() if val == selected_team_data['home_location_id']), None)
             current_loc_index = loc_options_list.index(current_loc_key) if current_loc_key else 0
             update_loc_name = st.selectbox("Home Location", loc_options_list, index=current_loc_index)

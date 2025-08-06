@@ -89,13 +89,11 @@ selected_member_id = member_options[selected_member_label]
 if selected_member_id:
     st.subheader(f"Hobbies for {selected_member_label.split(' - ')[1]}")
     
-    # Use our new backend function to get the member's current hobbies
     member_hobbies = db.execute_query(ops.get_hobbies_for_member, params={"club_member_id": selected_member_id})
     
     if not member_hobbies:
         st.info("This member has no assigned hobbies.")
     else:
-        # Display current hobbies with a button to remove each one
         for hobby in member_hobbies:
             col1, col2 = st.columns([4, 1])
             col1.write(f"- {hobby['hobby_name']}")
@@ -114,7 +112,6 @@ if selected_member_id:
     st.write("---")
     st.write("##### Assign a New Hobby")
     
-    # Filter the master hobby list to show only hobbies the member DOES NOT have
     member_hobby_ids = {h['hobby_id'] for h in member_hobbies}
     available_hobbies = [h for h in hobbies if h['hobby_id'] not in member_hobby_ids]
     

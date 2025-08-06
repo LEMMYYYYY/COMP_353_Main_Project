@@ -13,7 +13,7 @@ def get_db_connection():
     try:
         conn = mysql.connector.connect(**db_config)
         if conn.is_connected():
-            # print('Connected to MySQL database')
+            print('Connected to MySQL database')
             return conn
     except Error as e:
         print(f"Error connecting to MySQL: {e}")
